@@ -14,9 +14,12 @@ import math
 velocidad_x = 0.5
 velocidad_y = 0.5
 JUMP = False
+IS_JUMPING = False
+IS_FALLING = False
 
 posicion_triangulo = [0.2,0.0,0.0]
 posicion_cuadrado = [-0.2, 0.0, 0.0]
+posicion_y_cuadrado_anterior = 0.0
 window = None
 
 tiempo_anterior = 0.0
@@ -30,9 +33,10 @@ def key_callback(window, key, scancode, action, mods):
 def actualizar():
     global velocidad_x, velocidad_y
     global tiempo_anterior
-    global window, JUMP
+    global window, JUMP, IS_JUMPING, IS_FALLING 
     global posicion_triangulo
     global posicion_cuadrado
+    global posicion_y_cuadrado_anterior 
 
     tiempo_actual = glfw.get_time()
     #Cuanto tiempo paso entre la ejecucion actual
@@ -71,18 +75,38 @@ def actualizar():
         posicion_cuadrado[0] = posicion_cuadrado[0] - cantidad_movimiento
 
     #Salto
-    vel_y = velocidad_y * tiempo_delta
+    poder_salto = 1.5
+    vel_y = velocidad_y * tiempo_delta * poder_salto
+    gravedad = -0.3
 
     estado_tecla_space = glfw.get_key(window, glfw.KEY_SPACE)
-    if JUMP is False and estado_tecla_space == glfw.PRESS:
+    if JUMP is False and IS_JUMPING is False and estado_tecla_space == glfw.PRESS:
         JUMP = True
+        posicion_y_cuadrado_anterior = posicion_cuadrado[1]
 
     if JUMP is True:
-        posicion_cuadrado[1] -= vel_y
-        vel_y -= 0.1
-        if vel_y < -0.5:
-            JUMP  = False
-            vel_y = 0.5
+        # Añade a la y la velocidad_y a la velocidad anteiror
+        # Añade la velocidad del salto
+        posicion_cuadrado[1] += vel_y
+        IS_JUMPING = True
+
+    # Ver si ya se paso de burger
+    if IS_JUMPING:
+        if posicion_cuadrado[1] - posicion_y_cuadrado_anterior >= 0.2:
+            print("Bruhc")
+            JUMP = False
+            vel_y = gravedad * tiempo_delta
+            posicion_cuadrado[1] += vel_y
+            IS_FALLING = True
+
+    if IS_FALLING: 
+        vel_y = gravedad * tiempo_delta
+        posicion_cuadrado[1] += vel_y
+
+    if posicion_cuadrado[1] < 0:
+        IS_JUMPING = False
+        JUMP = False
+        IS_FALLING = False
 
     tiempo_anterior = tiempo_actual
 
