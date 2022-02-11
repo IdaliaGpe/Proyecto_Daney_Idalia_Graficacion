@@ -1,18 +1,8 @@
-#Comandos para librerías
-#pip install pyopengl
-#pip install glfw
-
-#Importar librerias
-
 from sre_constants import JUMP
 from OpenGL.GL import *
 from glew_wish import *
 
 import glfw
-import colision as col
-import draw_triangulo as trin
-import draw_cuadrado as cua
-import math
 
 #Variables
 velocidad_x = 0.5
@@ -27,12 +17,6 @@ posicion_y_cuadrado_anterior = 0.0
 window = None
 
 tiempo_anterior = 0.0
-
-#Teclas
-def key_callback(window, key, scancode, action, mods):
-    #Que la tecla escape cierre ventana al ser presionado
-    if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
-         glfw.set_window_should_close(window, 1)
 
 def actualizar():
     global velocidad_x, velocidad_y
@@ -113,77 +97,3 @@ def actualizar():
         IS_FALLING = False
 
     tiempo_anterior = tiempo_actual
-
-#Pintar
-def draw():
-    cua.draw_cuadrado(posicion_cuadrado)
-    trin.draw_triangulo(posicion_triangulo, posicion_cuadrado)
-
-#Main
-def main():
-    global window
-
-    width = 700
-    height = 700
-    #Inicializar GLFW
-    if not glfw.init():
-        return
-
-    #declarar ventana
-    window = glfw.create_window(width, height, "Mi ventana", None, None)
-
-    #Configuraciones de OpenGL
-    glfw.window_hint(glfw.SAMPLES, 4)
-    glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
-    glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
-    glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL_TRUE)
-    glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-
-    #Verificamos la creacion de la ventana
-    if not window:
-        glfw.terminate()
-        return
-
-    #Establecer el contexto
-    glfw.make_context_current(window)
-
-    #Le dice a GLEW que si usaremos el GPU
-    glewExperimental = True
-
-    #Inicializar glew
-    if glewInit() != GLEW_OK:
-        print("No se pudo inicializar GLEW")
-        return
-
-    #imprimir version
-    version = glGetString(GL_VERSION)
-    print(version)
-
-    glfw.set_key_callback(window, key_callback)
-    
-    #Draw loop
-    while not glfw.window_should_close(window):
-        #Establecer el viewport
-        #glViewport(0,0,width,height)
-        #Establecer color de borrado
-        glClearColor(0.7,0.7,0.7,1)
-        #Borrar el contenido del viewport
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-
-        actualizar()
-        #Dibujar
-        draw()
-
-
-        #Polling de inputs
-        glfw.poll_events()
-
-        #Cambia los buffers
-        glfw.swap_buffers(window)
-
-    glfw.destroy_window(window)
-    glfw.terminate()
-
-if __name__ == "__main__":
-    main()
