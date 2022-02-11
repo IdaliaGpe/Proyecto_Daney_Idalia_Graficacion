@@ -7,7 +7,10 @@
 from sre_constants import JUMP
 from OpenGL.GL import *
 from glew_wish import *
+
 import glfw
+import colision as col
+
 import math
 
 #Variables
@@ -93,7 +96,7 @@ def actualizar():
     # Ver si ya se paso de burger
     if IS_JUMPING:
         if posicion_cuadrado[1] - posicion_y_cuadrado_anterior >= 0.2:
-            print("Bruhc")
+            # print("Bruhc")
             JUMP = False
             vel_y = gravedad * tiempo_delta
             posicion_cuadrado[1] += vel_y
@@ -110,20 +113,6 @@ def actualizar():
 
     tiempo_anterior = tiempo_actual
 
-#Colision
-def colisoniando():
-    colisionando = False
-    #Extrema derecha del triangulo >= Extrema izquierda cuadrado
-    #Extrema izquierda del triangulo <= Extrema derecha cuadrado
-    #Extrema superior del triangulo >= Extrema inferior cuadrado
-    #Extrema inferior del triangulo <= Extrema superior cuadrado
-    if (posicion_triangulo[0] + 0.05 > posicion_cuadrado[0] - 0.05 
-    and posicion_triangulo[0] - 0.05 <= posicion_cuadrado[0] + 0.05 
-    and posicion_triangulo[1] + 0.05 > posicion_cuadrado[1] - 0.05 
-    and posicion_triangulo[1] - 0.05 <= posicion_cuadrado[1] + 0.05):
-        colisionando = True
-    return colisionando
-
 #Dibujar triangulo
 def draw_triangulo():
     global posicion_triangulo
@@ -132,7 +121,7 @@ def draw_triangulo():
     glBegin(GL_TRIANGLES)
 
     #Establecer color    
-    if colisoniando():
+    if col.colision(posicion_triangulo, posicion_cuadrado):
         glColor3f(0,0,1)
     else:
         glColor3f(1,0,0)
