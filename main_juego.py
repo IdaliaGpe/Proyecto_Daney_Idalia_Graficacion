@@ -10,7 +10,7 @@ from glew_wish import *
 
 import glfw
 import colision as col
-
+import draw_triangulo as trin
 import math
 
 #Variables
@@ -114,35 +114,35 @@ def actualizar():
     tiempo_anterior = tiempo_actual
 
 #Dibujar triangulo
-def draw_triangulo():
-    global posicion_triangulo
-    glPushMatrix()
-    glTranslatef(posicion_triangulo[0], posicion_triangulo[1],0.0)
-    glBegin(GL_TRIANGLES)
+# def draw_triangulo():
+#     global posicion_triangulo
+#     glPushMatrix()
+#     glTranslatef(posicion_triangulo[0], posicion_triangulo[1],0.0)
+#     glBegin(GL_TRIANGLES)
 
-    #Establecer color    
-    if col.colision(posicion_triangulo, posicion_cuadrado):
-        glColor3f(0,0,1)
-    else:
-        glColor3f(1,0,0)
+#     #Establecer color    
+#     if col.colision(posicion_triangulo, posicion_cuadrado):
+#         glColor3f(0,0,1)
+#     else:
+#         glColor3f(1,0,0)
 
-    #Manda vertices a dibujar
-    glVertex3f(-0.05,-0.05,0)
-    glVertex3f(0.0,0.05,0)
-    glVertex3f(0.05,-0.05,0)
+#     #Manda vertices a dibujar
+#     glVertex3f(-0.05,-0.05,0)
+#     glVertex3f(0.0,0.05,0)
+#     glVertex3f(0.05,-0.05,0)
 
-    glEnd()
+#     glEnd()
 
-    glBegin(GL_LINE_LOOP)
-    glColor3f(0.0,0.0,0.0)
-    glVertex3f(-0.05,-0.05,0.0)
-    glVertex3f(-0.05,0.05,0.0)
-    glVertex3f(0.05,0.05,0.0)
-    glVertex3f(0.05,-0.05,0.0)
+#     glBegin(GL_LINE_LOOP)
+#     glColor3f(0.0,0.0,0.0)
+#     glVertex3f(-0.05,-0.05,0.0)
+#     glVertex3f(-0.05,0.05,0.0)
+#     glVertex3f(0.05,0.05,0.0)
+#     glVertex3f(0.05,-0.05,0.0)
 
-    glEnd()
+#     glEnd()
 
-    glPopMatrix()
+#     glPopMatrix()
 
 def draw_cuadrado():
     global posicion_cuadrado
@@ -168,9 +168,8 @@ def draw_cuadrado():
 
 #Pintar
 def draw():
-
     draw_cuadrado()
-    draw_triangulo()
+    trin.draw_triangulo(posicion_triangulo, posicion_cuadrado)
 
 #Main
 def main():
